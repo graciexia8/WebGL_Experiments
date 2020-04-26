@@ -9,5 +9,33 @@
         browser does not support html5
     </canvas>
     <h3>This is text for under the canvas</h3>
+
+    <script id="vertex-shader" type="not-javascript">
+      precision mediump float;
+      precision mediump int;
+
+      uniform vec4 vertexColor;
+
+      attribute vec2 vertexPosition;
+
+      void main(){
+          gl_Position = vec4(vertexPosition, 0.0, 1.0);
+      }
+    </script>
+
+    <script id="fragment-shader" type="not-javascript">
+      precision mediump float;
+      precision mediump int;
+      
+      uniform vec4 vertexColor;
+      
+      void main(){
+          //only output your fragment shader will ever have
+          gl_FragColor = vertexColor;
+      }
+    </script>
+
+    <script src="webgl_program_one/model.js"></script>
+    <script src="webgl_program_one/render.js"></script>
     <script src="webgl_program_one/app.js"></script>
 </body>
