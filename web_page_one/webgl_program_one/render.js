@@ -27,7 +27,7 @@ window.triangleRender = function(gl, program, model, model_color){
 
     function _buildBufferObjectData() {
         
-        numVertices = 3;
+        numVertices = 4;
         //the buffer object to hold the triangles vertices
         vertices2 = new Float32Array(numVertices*2);
         color3 = new Float32Array(numVertices*3);
@@ -37,7 +37,7 @@ window.triangleRender = function(gl, program, model, model_color){
         nc = 0;
 
             //load model values into buffer object
-        for (i = 0; i < 3; i++){
+        for (i = 0; i < numVertices; i++){
             for (j = 0; j < 2; j++, nv++){
                 vertices2[nv] = model.triangle.vertices[i][j];
             }
