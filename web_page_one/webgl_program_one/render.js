@@ -2,8 +2,9 @@ window.triangleRender = function(gl, program, model, model_color){
     var self = this;
 
     var triangle_vertex_buffer_id = null;
+    var triangles_color_buffer_id = null;
     var a_Vertex_location = null;
-    var u_Color_location = null;
+    var a_Color_location = null;
 
     function _createBufferObject(gl, data) {
         // Create a buffer object
@@ -28,27 +29,37 @@ window.triangleRender = function(gl, program, model, model_color){
         
         numVertices = 3;
         //the buffer object to hold the triangles vertices
-        vertices3 = new Float32Array(numVertices*2);
+        vertices2 = new Float32Array(numVertices*2);
+        color3 = new Float32Array(numVertices*3);
 
 
         nv = 0;
+        nc = 0;
 
             //load model values into buffer object
         for (i = 0; i < 3; i++){
             for (j = 0; j < 2; j++, nv++){
-                vertices3[nv] = model.triangle.vertices[i][j];
+                vertices2[nv] = model.triangle.vertices[i][j];
             }
+
+            for(m = 0; m < 3; m++, nc++){
+                color3[nc] = model.triangle.colors[m];
+            }
+
         }
 
             //create new buffer object
-        triangle_vertex_buffer_id = _createBufferObject(gl, vertices3);
-        console.log(vertices3);
-        vertices3 = null;
+        triangle_vertex_buffer_id = _createBufferObject(gl, vertices2);
+
+
+        triangles_color_buffer_id = _createBufferObject(gl, color3);
+        vertices2 = null;
+        color3 = null;
     }
 
     function _getLocationOfShaderVariables() {
         // Get the location of the shader variables
-        u_Color_location = gl.getUniformLocation(program, 'vertexColor');
+        a_Color_location = gl.getUniformLocation(program, 'vertexColor');
         a_Vertex_location = gl.getAttribLocation(program,  'vertexPosition');
     }
 
@@ -66,7 +77,7 @@ window.triangleRender = function(gl, program, model, model_color){
         gl.useProgram(program);
     
         // Set the color for all of the triangle faces
-        gl.uniform4fv(u_Color_location, model_color); //feeds these values to the vertexColor parameter
+        //gl.uniform4fv(u_Color_location, model_color); //feeds these values to the vertexColor parameter
     
         // Activate the model's vertex Buffer Object
         gl.bindBuffer(gl.ARRAY_BUFFER, triangle_vertex_buffer_id);
@@ -74,6 +85,15 @@ window.triangleRender = function(gl, program, model, model_color){
         // Bind the vertices Buffer Object to the 'a_Vertex' shader variable
         gl.vertexAttribPointer(a_Vertex_location, 2, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(a_Vertex_location);
+
+        // Activate the model's color Buffer Object
+        gl.bindBuffer(gl.ARRAY_BUFFER, triangles_color_buffer_id);
+
+        
+        // Bind the color Buffer Object to the 'a_Color' shader variable
+        gl.vertexAttribPointer(a_Color_location, 3, gl.FLOAT, false, 0, 0);
+        gl.enableVertexAttribArray(a_Color_location);
+
 
     
         // Draw all of the triangles
