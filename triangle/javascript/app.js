@@ -4,7 +4,7 @@ window.initDemo = function(){
     let canvas = getCanvas("game-surface");
     let gl = this.getWebglContext(canvas);
 
-    gl.clearColor(0.22, 1.0, 0.6, 0.5);
+    gl.clearColor(1.0, 1.0, 0.6, 0.5);
     gl.clear(gl.COLOR_BUFFER_BIT, gl.DEPTH_BUFFER_BIT);
 
     //get vertex and fragment shader from html file
@@ -55,7 +55,7 @@ window.initDemo = function(){
     
     //create the buffer
     let model = CreateTriangle();
-    let modelColor = new Float32Array([0.75, 1.0, 0.0, 0.6]);
+    let modelColor = new Float32Array([0.0, 1.0, 0.0, 0.6]);
 
 
     var triangle =  new triangleRender(gl, program, model, modelColor);

@@ -51,7 +51,6 @@ window.triangleRender = function(gl, program, model, model_color){
             //create new buffer object
         triangle_vertex_buffer_id = _createBufferObject(gl, vertices2);
 
-
         triangles_color_buffer_id = _createBufferObject(gl, color3);
         vertices2 = null;
         color3 = null;

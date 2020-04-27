@@ -14,10 +14,10 @@ window.Triangle = function (vertices, colors) {
     var vertices, triangle1
   
     // Vertex data
-    vertices = [ [0.0, 1.0], [-0.5, -0.5], [0.5, -0.5] ];
+    vertices = [ [0.0, 0.5], [-0.5, -0.5], [0.5, -0.5] ];
   
     // Create 4 triangles
-    colors = [[ 1.0, 1.0, 0.0],[0.7, 0.0, 1.0], [0.1, 1.0, 0.6]];
+    colors = [[ 0.5, 1.0, 0.4],[0.7, 0.0, 1.0], [0.1, 0.4, 0.6]];
     triangle1 = new Triangle([vertices[0], vertices[1], vertices[2]], colors);
     
     
