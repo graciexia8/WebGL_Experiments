@@ -48,8 +48,8 @@ window.triangleRender = function(gl, program, model, model_color){
 
     function _getLocationOfShaderVariables() {
         // Get the location of the shader variables
-        u_Color_location     = gl.getUniformLocation(program, 'vertColor');
-        a_Vertex_location    = gl.getAttribLocation(program,  'vertexPosition');
+        u_Color_location = gl.getUniformLocation(program, 'vertexColor');
+        a_Vertex_location = gl.getAttribLocation(program,  'vertexPosition');
     }
 
     // These one-time tasks set up the rendering of the models.
@@ -63,9 +63,10 @@ window.triangleRender = function(gl, program, model, model_color){
     };
 
     self.render = function (gl) {
+        gl.useProgram(program);
     
         // Set the color for all of the triangle faces
-        gl.uniform4fv(u_Color_location, model_color);
+        gl.uniform4fv(u_Color_location, model_color); //feeds these values to the vertexColor parameter
     
         // Activate the model's vertex Buffer Object
         gl.bindBuffer(gl.ARRAY_BUFFER, triangle_vertex_buffer_id);
@@ -73,7 +74,7 @@ window.triangleRender = function(gl, program, model, model_color){
         // Bind the vertices Buffer Object to the 'a_Vertex' shader variable
         gl.vertexAttribPointer(a_Vertex_location, 2, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(a_Vertex_location);
-        gl.useProgram(program);
+
     
         // Draw all of the triangles
         gl.drawArrays(gl.TRIANGLES, 0, 3);

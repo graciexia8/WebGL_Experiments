@@ -55,7 +55,7 @@ window.initDemo = function(){
     
     //create the buffer
     let model = CreateTriangle();
-    let modelColor = [0.75, 1.0, 0.0, 1.0];
+    let modelColor = new Float32Array([0.75, 1.0, 0.0, 0.6]);
 
 
     var triangle =  new triangleRender(gl, program, model, modelColor);
