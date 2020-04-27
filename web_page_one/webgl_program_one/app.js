@@ -55,6 +55,8 @@ window.initDemo = function(){
     
     //create the buffer
     let model = CreateTriangle();
+
+    //uniform color
     let modelColor = new Float32Array([0.75, 1.0, 0.0, 0.6]);
 
 
