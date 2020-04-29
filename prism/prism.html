@@ -11,7 +11,7 @@
 </head>
 
 <body onload="initDemo();">
-    <h3 font-fam>Single Triangle Face Demo</h3>
+    <h3 font-fam>Rotating Prism Demo</h3>
     <canvas id = "game-surface" width="600" height="400" >
         browser does not support html5
     </canvas>
@@ -20,13 +20,17 @@
       precision mediump float;
       precision mediump int;
 
+      uniform mat4 mWorld;
+      uniform mat4 mView;
+      uniform mat4 mProj;
+
       attribute vec3 vertexColor;
-      attribute vec2 vertexPosition;
+      attribute vec3 vertexPosition;
 
       varying vec4 v_vertex_color;
 
       void main(){
-          gl_Position = vec4(vertexPosition, 0.0, 1.0);
+          gl_Position = mProj*mView*mWorld*vec4(vertexPosition, 1.0);
           v_vertex_color = vec4(vertexColor, 1.0);
       }
     </script>
@@ -39,10 +43,14 @@
       
       void main(){
           //only output your fragment shader will ever have
+          //comment f
           gl_FragColor = v_vertex_color;
       }
     </script>
 
+    <script src="javascript/learn_webgl_point4.js"></script>
+    <script src="javascript/learn_webgl_vector3.js"></script>
+    <script src="javascript/learn_webgl_matrix.js"></script>
     <script src="javascript/model.js"></script>
     <script src="javascript/render.js"></script>
     <script src="javascript/app.js"></script>
