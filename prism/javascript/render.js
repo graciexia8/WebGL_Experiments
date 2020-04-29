@@ -30,8 +30,6 @@ window.PrismRender = function(gl, program, model, model_color, Matrix){
         numTriangles = model.triangle.length;
         numVertices = numTriangles*3;
 
-        console.log(model);
-
         //the buffer object to hold the triangles vertices
         vertices3 = new Float32Array(numVertices*3);
         color3 = new Float32Array(numVertices*3);
@@ -107,20 +105,49 @@ window.PrismRender = function(gl, program, model, model_color, Matrix){
 
         //get the locations of the matrices in the shader vectors
         var matModelUniformLocation = gl.getUniformLocation(program, 'mWorld');
-        var matViewUniformLocation = gl.getUniformLocation(program, 'mView');
-        var matProfUniformLocation = gl.getUniformLocation(program, 'mProj');
+        var matViewUniformLocation = gl.getUniformLocation(program, 'mView'); //have not actually learned at this
+        var matProfUniformLocation = gl.getUniformLocation(program, 'mProj'); //have not actually learned about this
 
         //intiailize empty 1d representations of 4x4 matrices of different transforms
         modelMatrix = Matrix.create();
         viewMatrix = Matrix.create();
         projMatrix = Matrix.create();
 
+        //set all three matrices to the identity matrix
+        Matrix.setIdentity(modelMatrix);
+        Matrix.setIdentity(viewMatrix);
+        Matrix.setIdentity(projMatrix);
+
+        //link to the shader variables mWorld, mView, and mProj
+        gl.uniformMatrix4fv(matModelUniformLocation, gl.FALSE, modelMatrix);
+	    gl.uniformMatrix4fv(matViewUniformLocation, gl.FALSE, viewMatrix);
+        gl.uniformMatrix4fv(matProfUniformLocation, gl.FALSE, projMatrix);
         
+        //create identity matrix
+        var identity_Matrix = Matrix.create();
+        Matrix.setIdentity(identity_Matrix);
 
-    
-        // Draw all of the triangles
-        gl.drawArrays(gl.TRIANGLES, 0, numTriangles*3);
+        //create roation matrix around y axis
+        var YRotationMatrix = Matrix.create();
+        var rotationAngle = 0; //angle that we will use to rotate
+        var animationLoop = function(){
+            rotationAngle = rotationAngle + 1.4;
+            Matrix.rotate(modelMatrix,rotationAngle, 0.5, .5, 0.5);
+            //Matrix.rotate(YRotationMatrix, rotationAngle, 0.0, 1.0, 0.0);
+            //Matrix.multiplySeries(modelMatrix, YRotationMatrix);
+            gl.uniformMatrix4fv(matModelUniformLocation, gl.FALSE, modelMatrix);
 
+            console.log(modelMatrix);
+            gl.clearColor(1.0, 1.0, 0.6, 0.5);
+		    gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
+
+            // Draw all of the triangles
+            gl.drawArrays(gl.TRIANGLES, 0, numTriangles*3);
+            window.requestAnimationFrame(animationLoop);
+
+        }
+       
+        window.requestAnimationFrame(animationLoop);
     
     };
 
