@@ -1,4 +1,4 @@
-window.PrismRender = function(gl, program, model, model_color, Matrix){
+window.CubeRender = function(gl, program, model, model_color, Matrix){
     var self = this;
 
     var triangle_vertex_buffer_id = null;
@@ -135,7 +135,7 @@ window.PrismRender = function(gl, program, model, model_color, Matrix){
         var rotationAngle = 0; //angle that we will use to rotate
         var animationLoop = function(){
             rotationAngle = rotationAngle + 1.4;
-            Matrix.rotate(modelMatrix,rotationAngle, 0.4, 1, 0);
+            Matrix.rotate(modelMatrix,rotationAngle, -0.01, 0.02, 0.01);
             //Matrix.rotate(YRotationMatrix, rotationAngle, 0.0, 1.0, 0.0);
             //Matrix.multiplySeries(modelMatrix, YRotationMatrix);
             gl.uniformMatrix4fv(matModelUniformLocation, gl.FALSE, modelMatrix);
