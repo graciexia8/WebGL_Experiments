@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    h3 {font-family: Helvetica, sans-serif;
+        color: #333333;
+        font-size: x-large;
+       }
+  </style>
+</head>
+
+<body onload="initDemo();">
+    <h3 font-fam>Rotating Cube Demo</h3>
+    <canvas id = "game-surface" width="800" height="600" >
+        browser does not support html5
+    </canvas>
+
+    <script id="vertex-shader" type="not-javascript">
+      precision mediump float;
+      precision mediump int;
+
+      uniform mat4 mWorld;
+      uniform mat4 mView;
+      uniform mat4 mProj;
+
+      attribute vec3 vertexColor;
+      attribute vec3 vertexPosition;
+
+      varying vec4 v_vertex_color;
+
+      void main(){
+          gl_Position = mProj*mView*mWorld*vec4(vertexPosition, 1.0);
+          v_vertex_color = vec4(vertexColor, 1.0);
+      }
+    </script>
+
+    <script id="fragment-shader" type="not-javascript">
+      precision mediump float;
+      precision mediump int;
+      
+      varying vec4 v_vertex_color;
+      
+      void main(){
+          //only output your fragment shader will ever have
+          //comment f
+          gl_FragColor = v_vertex_color;
+      }
+    </script>
+
+    <script src="javascript/learn_webgl_point4.js"></script>
+    <script src="javascript/learn_webgl_vector3.js"></script>
+    <script src="javascript/learn_webgl_matrix.js"></script>
+    <script src="javascript/model.js"></script>
+    <script src="javascript/render.js"></script>
+    <script src="javascript/app.js"></script>
+</body>

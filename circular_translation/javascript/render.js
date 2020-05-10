@@ -58,8 +58,6 @@ window.CubeRender = function(gl, program, model, model_color, Matrix){
 
         }
         
-        console.log(color3);
-        console.log(vertices3);
             //create new buffer object
         triangle_vertex_buffer_id = _createBufferObject(gl, vertices3);
         triangles_color_buffer_id = _createBufferObject(gl, color3);
@@ -87,9 +85,6 @@ window.CubeRender = function(gl, program, model, model_color, Matrix){
     self.render = function (gl) {
         gl.useProgram(program);
     
-        // Set the color for all of the triangle faces
-        //gl.uniform4fv(u_Color_location, model_color); //feeds these values to the vertexColor parameter
-    
         // Activate the model's vertex Buffer Object
         gl.bindBuffer(gl.ARRAY_BUFFER, triangle_vertex_buffer_id);
     
@@ -99,12 +94,10 @@ window.CubeRender = function(gl, program, model, model_color, Matrix){
 
         // Activate the model's color Buffer Object
         gl.bindBuffer(gl.ARRAY_BUFFER, triangles_color_buffer_id);
-
         
         // Bind the color Buffer Object to the 'a_Color' shader variable
         gl.vertexAttribPointer(a_Color_location, 3, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(a_Color_location);
-
 
         //get the locations of the matrices in the shader vectors
         var matModelUniformLocation = gl.getUniformLocation(program, 'mWorld');
@@ -116,16 +109,15 @@ window.CubeRender = function(gl, program, model, model_color, Matrix){
         viewMatrix = Matrix.create();
         projMatrix = Matrix.create();
 
-        //set all three matrices to the identity matrix
+        //model matrix
         Matrix.setIdentity(modelMatrix);
-        Matrix.setIdentity(viewMatrix);
-        Matrix.setIdentity(projMatrix);
 
+        //set camera matrix
         Matrix.lookAt(viewMatrix,0,0,0.5,0,0,0,0,1,0);
-        //projMatrix = Matrix.createPerspective(95, 800/600, 0.001, 100);
+        
+        //set projection matrix
         projMatrix = Matrix.createOrthographic(-2,2,-2,2,-2,2);
-        //elf.createOrthographic = function (left, right, bottom, top, near, far) 
-        //(M, eye_x, eye_y, eye_z, center_x, center_y, center_z, up_dx, up_dy, up_dz)
+
         
         //link to the shader variables mWorld, mView, and mProj
         gl.uniformMatrix4fv(matModelUniformLocation, gl.FALSE, modelMatrix);
@@ -144,12 +136,21 @@ window.CubeRender = function(gl, program, model, model_color, Matrix){
         var translationAngle = 0;
         var animationLoop = function(){
 
-            gl.clearColor(0.0, 0.5, 0.0, 1.0);
+            gl.clearColor(0.6, 0.4, 0.5, 0.5);
             gl.clear(gl.COLOR_BUFFER_BIT, gl.DEPTH_BUFFER_BIT);
 
             rotationAngle = rotationAngle + 4;
-            Matrix.rotate(modelMatrix,rotationAngle,0.5, 0.2, 1);
+            Matrix.rotate(YRotationMatrix,rotationAngle,0.5, 0.2, 1);
             
+
+            translationAngle = translationAngle + 2;
+            radius = 1;
+            x = radius*Math.cos(Matrix.toRadians(translationAngle));
+            y = radius*Math.sin(Matrix.toRadians(translationAngle));
+
+            Matrix.translate(TranslationMatrix, y,x, 1);
+
+            Matrix.multiplySeries(modelMatrix, TranslationMatrix, YRotationMatrix);
             gl.uniformMatrix4fv(matModelUniformLocation, gl.FALSE, modelMatrix);
 
             // Draw all of the triangles
