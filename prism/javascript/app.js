@@ -6,6 +6,8 @@ window.initDemo = function(){
 
     gl.clearColor(1.0, 1.0, 0.6, 0.5);
     gl.clear(gl.COLOR_BUFFER_BIT, gl.DEPTH_BUFFER_BIT);
+    gl.enable(gl.DEPTH_TEST);
+
 
     //get vertex and fragment shader from html file
     //I've also written these in a separate file, but since js can't access locally with a webserver, this is the alt solution.
