@@ -121,6 +121,12 @@ window.CubeRender = function(gl, program, model, model_color, Matrix){
         Matrix.setIdentity(viewMatrix);
         Matrix.setIdentity(projMatrix);
 
+        Matrix.lookAt(viewMatrix,0,0,0.5,0,0,0,0,1,0);
+        //projMatrix = Matrix.createPerspective(95, 800/600, 0.001, 100);
+        projMatrix = Matrix.createOrthographic(-2,2,-2,2,-2,2);
+        //elf.createOrthographic = function (left, right, bottom, top, near, far) 
+        //(M, eye_x, eye_y, eye_z, center_x, center_y, center_z, up_dx, up_dy, up_dz)
+        
         //link to the shader variables mWorld, mView, and mProj
         gl.uniformMatrix4fv(matModelUniformLocation, gl.FALSE, modelMatrix);
 	    gl.uniformMatrix4fv(matViewUniformLocation, gl.FALSE, viewMatrix);
@@ -133,11 +139,15 @@ window.CubeRender = function(gl, program, model, model_color, Matrix){
         //create roation matrix around y axis
         var YRotationMatrix = Matrix.create();
         var rotationAngle = 0; //angle that we will use to rotate
+        var panAngle = 0;
         var animationLoop = function(){
+
+            gl.clearColor(0.0, 0.5, 0.0, 1.0);
+            gl.clear(gl.COLOR_BUFFER_BIT, gl.DEPTH_BUFFER_BIT);
+
             rotationAngle = rotationAngle + 1.4;
-            Matrix.rotate(modelMatrix,rotationAngle, -0.01, 0.02, 0.01);
-            //Matrix.rotate(YRotationMatrix, rotationAngle, 0.0, 1.0, 0.0);
-            //Matrix.multiplySeries(modelMatrix, YRotationMatrix);
+            Matrix.rotate(modelMatrix,rotationAngle,1, 1, 0);
+ 
             gl.uniformMatrix4fv(matModelUniformLocation, gl.FALSE, modelMatrix);
 
             // Draw all of the triangles

@@ -4,8 +4,14 @@ window.initDemo = function(){
     let canvas = getCanvas("game-surface");
     let gl = this.getWebglContext(canvas);
 
-    gl.clearColor(1.0, 1.0, 0.6, 0.5);
+    gl.clearColor(0.0, 0.5, 0.0, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT, gl.DEPTH_BUFFER_BIT);
+    gl.enable(gl.DEPTH_TEST);
+
+    //NOT SURE WHAT THESE ARE, BUT PUT HTEM HERE BC THE GUY IN THE TUTORIAL HAD THEM
+    //gl.enable(gl.CULL_FACE);
+    gl.frontFace(gl.CCW);
+    gl.cullFace(gl.BACK);
 
     //get vertex and fragment shader from html file
     //I've also written these in a separate file, but since js can't access locally with a webserver, this is the alt solution.
@@ -59,10 +65,10 @@ window.initDemo = function(){
 
 
     var Matrix = new this.Learn_webgl_matrix();
-    var prism =  new CubeRender(gl, program, model, modelColor, Matrix);
+    var cube =  new CubeRender(gl, program, model, modelColor, Matrix);
     
 
-    prism.render(gl);
+    cube.render(gl);
 
 }
 
