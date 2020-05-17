@@ -1,16 +1,20 @@
-window.PrismRender = function(gl, program, model, model_color, Matrix){
-    var self = this;
+"use strict";
 
-    var triangle_vertex_buffer_id = null;
-    var triangles_color_buffer_id = null;
-    var a_Vertex_location = null;
-    var a_Color_location = null;
+window.PrismRender = function(gl, program, model, Matrix){
+    const self = this;
+
+    let triangle_vertex_buffer_id = null;
+    let triangles_color_buffer_id = null;
+    let a_Vertex_location = null;
+    let a_Color_location = null;
+
+    let numTriangles = null;
+    let numVertices = null;
 
     function _createBufferObject(gl, data) {
+
         // Create a buffer object
-        var buffer_id;
-    
-        buffer_id = gl.createBuffer();
+        const buffer_id = gl.createBuffer();
         if (!buffer_id) {
           out.displayError('Failed to create the buffer object for ' + model.name);
           return null;
@@ -31,36 +35,35 @@ window.PrismRender = function(gl, program, model, model_color, Matrix){
         numVertices = numTriangles*3;
 
         //the buffer object to hold the triangles vertices
-        vertices3 = new Float32Array(numVertices*3);
-        color3 = new Float32Array(numVertices*3);
+        let vertices3 = new Float32Array(numVertices*3);
+        let color3 = new Float32Array(numVertices*3);
 
 
-        nv = 0;
-        nc = 0;
+        let nv = 0;
+        let nc = 0;
+
         //go through each triangle
-        for (k = 0; k < numTriangles; k++){
+        for (let k = 0; k < numTriangles; k++){
             
-            var triangle = model.triangle[k];
+            const  triangle = model.triangle[k];
             //load model values into buffer object
             //for each vertex in  current triangle[k]
-            for (i = 0; i < 3; i++){
+            for (let i = 0; i < 3; i++){
 
                 //for each x,y,z coordinate
-                for (j = 0; j < 3; j++, nv++){
+                for (let j = 0; j < 3; j++, nv++){
                     vertices3[nv] = triangle.vertices[i][j];
                 }
 
-                for(m = 0; m < 3; m++, nc++){
+                for(let m = 0; m < 3; m++, nc++){
                     color3[nc] =  triangle.colors[i][m];
                 }
 
             }
 
         }
-        
-        console.log(color3);
-        console.log(vertices3);
-            //create new buffer object
+
+        //create new buffer object
         triangle_vertex_buffer_id = _createBufferObject(gl, vertices3);
         triangles_color_buffer_id = _createBufferObject(gl, color3);
 
@@ -78,7 +81,7 @@ window.PrismRender = function(gl, program, model, model_color, Matrix){
     _buildBufferObjectData();
     _getLocationOfShaderVariables();
 
-    self.delete = function (gl) {
+    self.delete = function (gl, numTriangles) {
         if (numTriangles > 0) {
           gl.deleteBuffer(triangles_vertex_buffer_id);
         }
@@ -107,14 +110,14 @@ window.PrismRender = function(gl, program, model, model_color, Matrix){
 
 
         //get the locations of the matrices in the shader vectors
-        var matModelUniformLocation = gl.getUniformLocation(program, 'mWorld');
-        var matViewUniformLocation = gl.getUniformLocation(program, 'mView'); //have not actually learned at this
-        var matProfUniformLocation = gl.getUniformLocation(program, 'mProj'); //have not actually learned about this
+        const matModelUniformLocation = gl.getUniformLocation(program, 'mWorld');
+        const matViewUniformLocation = gl.getUniformLocation(program, 'mView'); //have not actually learned at this
+        const matProfUniformLocation = gl.getUniformLocation(program, 'mProj'); //have not actually learned about this
 
         //intiailize empty 1d representations of 4x4 matrices of different transforms
-        modelMatrix = Matrix.create();
-        viewMatrix = Matrix.create();
-        projMatrix = Matrix.create();
+        let modelMatrix = Matrix.create();
+        let viewMatrix = Matrix.create();
+        let projMatrix = Matrix.create();
 
         //set all three matrices to the identity matrix
         Matrix.setIdentity(modelMatrix);
@@ -127,17 +130,17 @@ window.PrismRender = function(gl, program, model, model_color, Matrix){
         gl.uniformMatrix4fv(matProfUniformLocation, gl.FALSE, projMatrix);
         
         //create identity matrix
-        var identity_Matrix = Matrix.create();
+        let identity_Matrix = Matrix.create();
         Matrix.setIdentity(identity_Matrix);
 
         //create roation matrix around y axis
-        var YRotationMatrix = Matrix.create();
-        var rotationAngle = 0; //angle that we will use to rotate
-        var animationLoop = function(){
+        let YRotationMatrix = Matrix.create();
+        let rotationAngle = 0; //angle that we will use to rotate
+
+        let animationLoop = function(){
+
             rotationAngle = rotationAngle + 1.4;
             Matrix.rotate(modelMatrix,rotationAngle, 0.4, 1, 0);
-            //Matrix.rotate(YRotationMatrix, rotationAngle, 0.0, 1.0, 0.0);
-            //Matrix.multiplySeries(modelMatrix, YRotationMatrix);
             gl.uniformMatrix4fv(matModelUniformLocation, gl.FALSE, modelMatrix);
 
             // Draw all of the triangles

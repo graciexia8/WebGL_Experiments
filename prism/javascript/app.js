@@ -1,8 +1,8 @@
+"use strict";
 window.initDemo = function(){
-    console.log("this is working");
 
-    let canvas = getCanvas("game-surface");
-    let gl = this.getWebglContext(canvas);
+    const canvas = getCanvas("prism");
+    const gl = getWebglContext(canvas);
 
     gl.clearColor(1.0, 1.0, 0.6, 0.5);
     gl.clear(gl.COLOR_BUFFER_BIT, gl.DEPTH_BUFFER_BIT);
@@ -15,8 +15,8 @@ window.initDemo = function(){
     let fragShaderSource = document.getElementById("fragment-shader").text;
 
     //create shaders
-    var vertexShader = gl.createShader(gl.VERTEX_SHADER);
-    var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+    const vertexShader = gl.createShader(gl.VERTEX_SHADER);
+    const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
 
     //set the shaders
     gl.shaderSource(vertexShader, vertShaderSource);
@@ -37,18 +37,19 @@ window.initDemo = function(){
 	}
 
     //create program
-    var program = gl.createProgram();
+    const program = gl.createProgram();
 
     //attach shaders to the program
     gl.attachShader(program, vertexShader);
     gl.attachShader(program, fragmentShader);
 
-    //link the program
-    gl.linkProgram(program);
+  //link the program
+  gl.linkProgram(program);
     if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
 		console.error('ERROR linking program!', gl.getProgramInfoLog(program));
 		return;
-	}
+  }
+  
 	gl.validateProgram(program);
 	if (!gl.getProgramParameter(program, gl.VALIDATE_STATUS)) {
 		console.error('ERROR validating program!', gl.getProgramInfoLog(program));
@@ -56,41 +57,13 @@ window.initDemo = function(){
     }
     
     //create the buffer
-    let model = CreatePrism();
-    let modelColor = new Float32Array([0.0, 1.0, 0.0, 0.6]);
+    const model = CreatePrism();
 
 
-    var Matrix = new this.Learn_webgl_matrix();
-    var prism =  new PrismRender(gl, program, model, modelColor, Matrix);
+    let Matrix = new Learn_webgl_matrix();
+    const prism =  new PrismRender(gl, program, model, Matrix);
     
 
     prism.render(gl);
 
 }
-
-function getCanvas(canvas_id) {
-    let canvas;
-  
-    canvas = document.getElementById(canvas_id);
-    if (!canvas || canvas.nodeName !== "CANVAS") {
-      console.log('Fatal error: Canvas "' + canvas_id + '" could not be found');
-    }
-    return canvas;
-  }
-
-function getWebglContext(canvas) {
-    let context;
-  
-    context = canvas.getContext('webgl');
-
-    if (!context) {
-      console.log('WebGL not supported, falling back on experimental-webgl');
-      gl = canvas.getContext('experimental-webgl');
-    }
-  
-    if (!context) {
-      alert('Your browser does not support WebGL');
-    }
-  
-    return context;
-};

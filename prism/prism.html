@@ -2,6 +2,7 @@
 <html lang="en-US">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     h3 {font-family: Helvetica, sans-serif;
         color: #333333;
@@ -12,7 +13,7 @@
 
 <body onload="initDemo();">
     <h3 font-fam>Rotating Prism Demo</h3>
-    <canvas id = "game-surface" width="600" height="400" >
+    <canvas id = "prism" width="600" height="400" >
         browser does not support html5
     </canvas>
 
@@ -48,9 +49,10 @@
       }
     </script>
 
-    <script src="javascript/learn_webgl_point4.js"></script>
-    <script src="javascript/learn_webgl_vector3.js"></script>
-    <script src="javascript/learn_webgl_matrix.js"></script>
+    <script src="../lib/helper.js"></script>
+    <script src="../lib/learn_webgl_point4.js"></script>
+    <script src="../lib/learn_webgl_vector3.js"></script>
+    <script src="../lib/learn_webgl_matrix.js"></script>
     <script src="javascript/model.js"></script>
     <script src="javascript/render.js"></script>
     <script src="javascript/app.js"></script>
