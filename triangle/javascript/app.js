@@ -1,9 +1,11 @@
 window.initDemo = function(){
-    console.log("this is working");
 
-    let canvas = getCanvas("game-surface");
+    //get the canvas going to be used and set the context of the canvas.
+    let canvas = getCanvas("triangle");
     let gl = this.getWebglContext(canvas);
 
+    //clear the gl background color_buffer_bit and set to the color values in clear color
+    //clear the depth_buffer_bit
     gl.clearColor(1.0, 1.0, 0.6, 0.5);
     gl.clear(gl.COLOR_BUFFER_BIT, gl.DEPTH_BUFFER_BIT);
 
@@ -34,53 +36,34 @@ window.initDemo = function(){
 		return;
 	}
 
-    //create program
-    var program = gl.createProgram();
+  //create program
+  var program = gl.createProgram();
 
-    //attach shaders to the program
-    gl.attachShader(program, vertexShader);
-    gl.attachShader(program, fragmentShader);
+  //attach shaders to the program
+  gl.attachShader(program, vertexShader);
+  gl.attachShader(program, fragmentShader);
 
-    //link the program
-    gl.linkProgram(program);
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+  //link the program
+  gl.linkProgram(program);
+  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
 		console.error('ERROR linking program!', gl.getProgramInfoLog(program));
 		return;
-	}
+  }
+  
+  //validate the program
 	gl.validateProgram(program);
 	if (!gl.getProgramParameter(program, gl.VALIDATE_STATUS)) {
 		console.error('ERROR validating program!', gl.getProgramInfoLog(program));
 		return;
-    }
+  }
     
-    //create the buffer
+    //create the Triangle model
     let model = CreateTriangle();
-    let modelColor = new Float32Array([0.0, 1.0, 0.0, 0.6]);
 
+    //create new object to render triangle.
+    var triangle =  new triangleRender(gl, program, model);
 
-    var triangle =  new triangleRender(gl, program, model, modelColor);
-
+    // Render the triangle.
     triangle.render(gl);
 
 }
-
-function getCanvas(canvas_id) {
-    let canvas;
-  
-    canvas = document.getElementById(canvas_id);
-    if (!canvas || canvas.nodeName !== "CANVAS") {
-      console.log('Fatal error: Canvas "' + canvas_id + '" could not be found');
-    }
-    return canvas;
-  }
-
-function getWebglContext(canvas) {
-    let context;
-  
-    context = canvas.getContext('webgl');
-    if (!context) {
-      console.log("No WebGL context could be found.");
-    }
-  
-    return context;
-};

@@ -1,3 +1,4 @@
+// Model data that defines coordinates of triantle
 window.Triangle = function (vertices, colors) {
     var self = this;
     self.vertices = vertices;

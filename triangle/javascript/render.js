@@ -1,11 +1,15 @@
-window.triangleRender = function(gl, program, model, model_color){
+//Takes the the current contex
+window.triangleRender = function(gl, program, model){
     var self = this;
 
+    //Declares empty buffer objects for vertex and color. 
+    //Declares empty variables to store the location of the vertex/fragment shader variables.
     var triangle_vertex_buffer_id = null;
     var triangles_color_buffer_id = null;
     var a_Vertex_location = null;
     var a_Color_location = null;
 
+    // Initializes and binds a new buffer object. Returns the id location reference of the object.
     function _createBufferObject(gl, data) {
         // Create a buffer object
         var buffer_id;
@@ -25,18 +29,21 @@ window.triangleRender = function(gl, program, model, model_color){
         return buffer_id;
       }
 
+    // Constructs triangle vertex and color buffer objects based on values passed in by model.
     function _buildBufferObjectData() {
-        
+
+        //3 vertices for each triangle
         numVertices = 3;
+
         //the buffer object to hold the triangles vertices
         vertices2 = new Float32Array(numVertices*2);
         color3 = new Float32Array(numVertices*3);
 
-
+        // Counter variables to keep track of vertices and color3
         nv = 0;
         nc = 0;
 
-            //load model values into buffer object
+        // Load model values into buffer object
         for (i = 0; i < 3; i++){
             for (j = 0; j < 2; j++, nv++){
                 vertices2[nv] = model.triangle.vertices[i][j];
@@ -48,16 +55,17 @@ window.triangleRender = function(gl, program, model, model_color){
 
         }
 
-            //create new buffer object
+        // Create new buffer object
         triangle_vertex_buffer_id = _createBufferObject(gl, vertices2);
-
         triangles_color_buffer_id = _createBufferObject(gl, color3);
+
+        // Set storage to null to conserve space
         vertices2 = null;
         color3 = null;
     }
 
+    // Get the location of the shader variables.
     function _getLocationOfShaderVariables() {
-        // Get the location of the shader variables
         a_Color_location = gl.getAttribLocation(program, 'vertexColor');
         a_Vertex_location = gl.getAttribLocation(program,  'vertexPosition');
     }
@@ -66,17 +74,16 @@ window.triangleRender = function(gl, program, model, model_color){
     _buildBufferObjectData();
     _getLocationOfShaderVariables();
 
+    // Delete buffer object data from the webGL Context.
     self.delete = function (gl) {
         if (number_triangles > 0) {
           gl.deleteBuffer(triangles_vertex_buffer_id);
         }
     };
 
+    // Renders the buffer objects and sets up variables to feed into the Fragment shader.
     self.render = function (gl) {
         gl.useProgram(program);
-    
-        // Set the color for all of the triangle faces
-        //gl.uniform4fv(u_Color_location, model_color); //feeds these values to the vertexColor parameter
     
         // Activate the model's vertex Buffer Object
         gl.bindBuffer(gl.ARRAY_BUFFER, triangle_vertex_buffer_id);
@@ -92,13 +99,9 @@ window.triangleRender = function(gl, program, model, model_color){
         // Bind the color Buffer Object to the 'a_Color' shader variable
         gl.vertexAttribPointer(a_Color_location, 3, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(a_Color_location);
-
-
     
         // Draw all of the triangles
         gl.drawArrays(gl.TRIANGLES, 0, 3);
-
-    
     };
 
 
