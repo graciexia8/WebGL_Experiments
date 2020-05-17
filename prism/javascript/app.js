@@ -4,15 +4,6 @@ window.initDemo = function(){
     let canvas = getCanvas("game-surface");
     let gl = this.getWebglContext(canvas);
 
-    if (!gl) {
-      console.log('WebGL not supported, falling back on experimental-webgl');
-      gl = canvas.getContext('experimental-webgl');
-    }
-  
-    if (!gl) {
-      alert('Your browser does not support WebGL');
-    }
-
     gl.clearColor(1.0, 1.0, 0.6, 0.5);
     gl.clear(gl.COLOR_BUFFER_BIT, gl.DEPTH_BUFFER_BIT);
     gl.enable(gl.DEPTH_TEST);
@@ -91,8 +82,14 @@ function getWebglContext(canvas) {
     let context;
   
     context = canvas.getContext('webgl');
+
     if (!context) {
-      console.log("No WebGL context could be found.");
+      console.log('WebGL not supported, falling back on experimental-webgl');
+      gl = canvas.getContext('experimental-webgl');
+    }
+  
+    if (!context) {
+      alert('Your browser does not support WebGL');
     }
   
     return context;
