@@ -68,7 +68,7 @@ window.CubeRender = function(gl, program, model, model_color, Matrix){
 
     function _getLocationOfShaderVariables() {
         // Get the location of the shader variables
-        a_Color_location = gl.getUniformLocation(program, 'vertexColor');
+        a_Color_location = gl.getAttribLocation(program, 'vertexColor');
         a_Vertex_location = gl.getAttribLocation(program,  'vertexPosition');
     }
 
