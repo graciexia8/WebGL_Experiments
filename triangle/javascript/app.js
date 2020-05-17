@@ -1,8 +1,10 @@
+"use strict";
+
 window.initDemo = function(){
 
     //get the canvas going to be used and set the context of the canvas.
     let canvas = getCanvas("triangle");
-    let gl = this.getWebglContext(canvas);
+    let gl = getWebglContext(canvas);
 
     //clear the gl background color_buffer_bit and set to the color values in clear color
     //clear the depth_buffer_bit
@@ -11,25 +13,25 @@ window.initDemo = function(){
 
     //get vertex and fragment shader from html file
     //I've also written these in a separate file, but since js can't access locally with a webserver, this is the alt solution.
-    let vertShaderSource = document.getElementById("vertex-shader").text;
-    let fragShaderSource = document.getElementById("fragment-shader").text;
+    const vertShaderSource = document.getElementById("vertex-shader").text;
+    const fragShaderSource = document.getElementById("fragment-shader").text;
 
     //create shaders
-    var vertexShader = gl.createShader(gl.VERTEX_SHADER);
-    var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+    const vertexShader = gl.createShader(gl.VERTEX_SHADER);
+    const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
 
-    //set the shaders
+    // Set the shaders.
     gl.shaderSource(vertexShader, vertShaderSource);
     gl.shaderSource(fragmentShader, fragShaderSource);
 
-    //compile the shaders
-    //should have some assertion validation
+    // Compile the vertex shader, embedded in triangle.html.
     gl.compileShader(vertexShader);
     if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) {
 		console.error('ERROR compiling fragment shader!', gl.getShaderInfoLog(vertexShader));
 		return;
     }
     
+    // Compile the fragment shared from in triangle.html
     gl.compileShader(fragmentShader);
     if (!gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS)) {
 		console.error('ERROR compiling fragment shader!', gl.getShaderInfoLog(fragmentShader));
@@ -37,7 +39,7 @@ window.initDemo = function(){
 	}
 
   //create program
-  var program = gl.createProgram();
+  const program = gl.createProgram();
 
   //attach shaders to the program
   gl.attachShader(program, vertexShader);
@@ -57,13 +59,13 @@ window.initDemo = function(){
 		return;
   }
     
-    //create the Triangle model
-    let model = CreateTriangle();
+  //create the Triangle model
+  const model = CreateTriangle();
 
-    //create new object to render triangle.
-    var triangle =  new triangleRender(gl, program, model);
+  //create new object to render triangle.
+  const triangle =  new triangleRender(gl, program, model);
 
-    // Render the triangle.
-    triangle.render(gl);
+  // Render the triangle.
+  triangle.render(gl);
 
 }

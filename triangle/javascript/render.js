@@ -1,18 +1,20 @@
+"use strict";
+
 //Takes the the current contex
 window.triangleRender = function(gl, program, model){
-    var self = this;
+    const self = this;
 
     //Declares empty buffer objects for vertex and color. 
     //Declares empty variables to store the location of the vertex/fragment shader variables.
-    var triangle_vertex_buffer_id = null;
-    var triangles_color_buffer_id = null;
-    var a_Vertex_location = null;
-    var a_Color_location = null;
+    let triangle_vertex_buffer_id = null;
+    let triangles_color_buffer_id = null;
+    let a_Vertex_location = null;
+    let a_Color_location = null;
 
     // Initializes and binds a new buffer object. Returns the id location reference of the object.
     function _createBufferObject(gl, data) {
         // Create a buffer object
-        var buffer_id;
+        let buffer_id;
     
         buffer_id = gl.createBuffer();
         if (!buffer_id) {
@@ -33,23 +35,23 @@ window.triangleRender = function(gl, program, model){
     function _buildBufferObjectData() {
 
         //3 vertices for each triangle
-        numVertices = 3;
+        const numVertices = 3;
 
         //the buffer object to hold the triangles vertices
-        vertices2 = new Float32Array(numVertices*2);
-        color3 = new Float32Array(numVertices*3);
+        let vertices2 = new Float32Array(numVertices*2);
+        let color3 = new Float32Array(numVertices*3);
 
         // Counter variables to keep track of vertices and color3
-        nv = 0;
-        nc = 0;
+        let nv = 0;
+        let nc = 0;
 
         // Load model values into buffer object
-        for (i = 0; i < 3; i++){
-            for (j = 0; j < 2; j++, nv++){
+        for (let i = 0; i < 3; i++){
+            for (let j = 0; j < 2; j++, nv++){
                 vertices2[nv] = model.triangle.vertices[i][j];
             }
 
-            for(m = 0; m < 3; m++, nc++){
+            for(let m = 0; m < 3; m++, nc++){
                 color3[nc] = model.triangle.colors[i][m];
             }
 
