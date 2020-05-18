@@ -1,8 +1,8 @@
+"use strict";
 window.initDemo = function(){
-    console.log("this is working");
 
-    let canvas = getCanvas("game-surface");
-    let gl = this.getWebglContext(canvas);
+    const canvas = getCanvas("game-surface");
+    const gl = getWebglContext(canvas);
 
     gl.clearColor(0.0, 0.2, 0.2, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT, gl.DEPTH_BUFFER_BIT);
@@ -15,12 +15,12 @@ window.initDemo = function(){
 
     //get vertex and fragment shader from html file
     //I've also written these in a separate file, but since js can't access locally with a webserver, this is the alt solution.
-    let vertShaderSource = document.getElementById("vertex-shader").text;
-    let fragShaderSource = document.getElementById("fragment-shader").text;
+    const vertShaderSource = document.getElementById("vertex-shader").text;
+    const fragShaderSource = document.getElementById("fragment-shader").text;
 
     //create shaders
-    var vertexShader = gl.createShader(gl.VERTEX_SHADER);
-    var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+    const vertexShader = gl.createShader(gl.VERTEX_SHADER);
+    const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
 
     //set the shaders
     gl.shaderSource(vertexShader, vertShaderSource);
@@ -30,18 +30,18 @@ window.initDemo = function(){
     //should have some assertion validation
     gl.compileShader(vertexShader);
     if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) {
-		console.error('ERROR compiling fragment shader!', gl.getShaderInfoLog(vertexShader));
-		return;
+      console.error('ERROR compiling fragment shader!', gl.getShaderInfoLog(vertexShader));
+      return;
     }
     
     gl.compileShader(fragmentShader);
     if (!gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS)) {
-		console.error('ERROR compiling fragment shader!', gl.getShaderInfoLog(fragmentShader));
-		return;
+      console.error('ERROR compiling fragment shader!', gl.getShaderInfoLog(fragmentShader));
+      return;
 	}
 
     //create program
-    var program = gl.createProgram();
+    const program = gl.createProgram();
 
     //attach shaders to the program
     gl.attachShader(program, vertexShader);
@@ -50,24 +50,21 @@ window.initDemo = function(){
     //link the program
     gl.linkProgram(program);
     if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-		console.error('ERROR linking program!', gl.getProgramInfoLog(program));
-		return;
+      console.error('ERROR linking program!', gl.getProgramInfoLog(program));
+      return;
 	}
 	gl.validateProgram(program);
 	if (!gl.getProgramParameter(program, gl.VALIDATE_STATUS)) {
-		console.error('ERROR validating program!', gl.getProgramInfoLog(program));
-		return;
+      console.error('ERROR validating program!', gl.getProgramInfoLog(program));
+      return;
     }
     
     //create the buffer
-    let model = CreateCube();
-    let modelColor = new Float32Array([0.0, 1.0, 0.0, 0.6]);
+    const model = CreateCube();
 
-
-    var Matrix = new this.Learn_webgl_matrix();
-    var cube =  new CubeRender(gl, program, model, modelColor, Matrix);
+    let Matrix = new Learn_webgl_matrix();
+    const cube =  new CubeRender(gl, program, model, Matrix);
     
-
     cube.render(gl);
 
 }

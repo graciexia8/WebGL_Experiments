@@ -1,16 +1,19 @@
-window.CubeRender = function(gl, program, model, model_color, Matrix){
-    var self = this;
+"use strict";
 
-    var triangle_vertex_buffer_id = null;
-    var triangles_color_buffer_id = null;
-    var a_Vertex_location = null;
-    var a_Color_location = null;
+window.CubeRender = function(gl, program, model, Matrix){
+    const self = this;
+
+    let triangle_vertex_buffer_id = null;
+    let triangles_color_buffer_id = null;
+    let a_Vertex_location = null;
+    let a_Color_location = null;
+    let numTriangles = null;
+    let numVertices = null;
 
     function _createBufferObject(gl, data) {
-        // Create a buffer object
-        var buffer_id;
-    
-        buffer_id = gl.createBuffer();
+        
+        // Create a buffer object    
+        const buffer_id = gl.createBuffer();
         if (!buffer_id) {
           out.displayError('Failed to create the buffer object for ' + model.name);
           return null;
@@ -31,26 +34,26 @@ window.CubeRender = function(gl, program, model, model_color, Matrix){
         numVertices = numTriangles*3;
 
         //the buffer object to hold the triangles vertices
-        vertices3 = new Float32Array(numVertices*3);
-        color3 = new Float32Array(numVertices*3);
+        let vertices3 = new Float32Array(numVertices*3);
+        let color3 = new Float32Array(numVertices*3);
 
 
-        nv = 0;
-        nc = 0;
+        let nv = 0;
+        let nc = 0;
         //go through each triangle
-        for (k = 0; k < numTriangles; k++){
+        for (let k = 0; k < numTriangles; k++){
             
             var triangle = model.triangle[k];
             //load model values into buffer object
             //for each vertex in  current triangle[k]
-            for (i = 0; i < 3; i++){
+            for (let i = 0; i < 3; i++){
 
                 //for each x,y,z coordinate
-                for (j = 0; j < 3; j++, nv++){
+                for (let j = 0; j < 3; j++, nv++){
                     vertices3[nv] = triangle.vertices[i][j];
                 }
 
-                for(m = 0; m < 3; m++, nc++){
+                for(let m = 0; m < 3; m++, nc++){
                     color3[nc] =  triangle.colors[i][m];
                 }
 
@@ -100,14 +103,14 @@ window.CubeRender = function(gl, program, model, model_color, Matrix){
         gl.enableVertexAttribArray(a_Color_location);
 
         //get the locations of the matrices in the shader vectors
-        var matModelUniformLocation = gl.getUniformLocation(program, 'mWorld');
-        var matViewUniformLocation = gl.getUniformLocation(program, 'mView'); //have not actually learned at this
-        var matProfUniformLocation = gl.getUniformLocation(program, 'mProj'); //have not actually learned about this
+        const matModelUniformLocation = gl.getUniformLocation(program, 'mWorld');
+        const matViewUniformLocation = gl.getUniformLocation(program, 'mView'); //have not actually learned at this
+        const matProfUniformLocation = gl.getUniformLocation(program, 'mProj'); //have not actually learned about this
 
         //intiailize empty 1d representations of 4x4 matrices of different transforms
-        modelMatrix = Matrix.create();
-        viewMatrix = Matrix.create();
-        projMatrix = Matrix.create();
+        let modelMatrix = Matrix.create();
+        let viewMatrix = Matrix.create();
+        let projMatrix = Matrix.create();
 
         //model matrix
         Matrix.setIdentity(modelMatrix);
@@ -125,16 +128,17 @@ window.CubeRender = function(gl, program, model, model_color, Matrix){
         gl.uniformMatrix4fv(matProfUniformLocation, gl.FALSE, projMatrix);
         
         //create identity matrix
-        var identity_Matrix = Matrix.create();
+        let identity_Matrix = Matrix.create();
         Matrix.setIdentity(identity_Matrix);
 
         //create roation matrix around y axis
-        var YRotationMatrix = Matrix.create();
-        var TranslationMatrix = Matrix.create();
+        let YRotationMatrix = Matrix.create();
+        let TranslationMatrix = Matrix.create();
 
-        var rotationAngle = 0; //angle that we will use to rotate
-        var translationAngle = 0;
-        var animationLoop = function(){
+        let rotationAngle = 0; //angle that we will use to rotate
+        let translationAngle = 0;
+    
+        let animationLoop = function(){
 
             gl.clearColor(0.6, 0.4, 0.5, 0.5);
             gl.clear(gl.COLOR_BUFFER_BIT, gl.DEPTH_BUFFER_BIT);
@@ -144,11 +148,11 @@ window.CubeRender = function(gl, program, model, model_color, Matrix){
             
 
             translationAngle = translationAngle + 2;
-            radius = 1;
-            x = radius*Math.cos(Matrix.toRadians(translationAngle));
-            y = radius*Math.sin(Matrix.toRadians(translationAngle));
+            var radius = 1;
+            var x = radius*Math.cos(Matrix.toRadians(translationAngle));
+            var y = radius*Math.sin(Matrix.toRadians(translationAngle));
 
-            Matrix.translate(TranslationMatrix, y,x, 1);
+            Matrix.translate(TranslationMatrix, y, x, 1);
 
             Matrix.multiplySeries(modelMatrix, TranslationMatrix, YRotationMatrix);
             gl.uniformMatrix4fv(matModelUniformLocation, gl.FALSE, modelMatrix);
