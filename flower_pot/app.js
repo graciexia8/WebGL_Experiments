@@ -91,7 +91,7 @@ window.runDemo = function(vertShaderSource, fragShaderSource, modelText){
     //create the buffer
     const model = CreateFlowerPot(modelText);
     let Matrix = new this.Learn_webgl_matrix();
-    const FlowerPot = new CubeRender(gl, program, model, Matrix);
+    const FlowerPot = new FlowerPotRender(gl, program, model, Matrix);
 
     FlowerPot.render(gl);
 
