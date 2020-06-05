@@ -13,7 +13,7 @@ window.initDemo = function () {
           console.error(fsErr);
         }
         else {
-          loadJSONResource("../flower_pot/Model/flower_pot.json", function (modelErr, modelText){
+          loadJSONResource("../models/json_models/flower_pot.json", function (modelErr, modelText){
             if (modelErr) {
               alert("Fatal Error: Getting model json");
               console.error(modelErr);
