@@ -101,17 +101,20 @@ window.FlowerPotRender = function(gl, program, model, Matrix){
 
         //create roation matrix around y axis
         let YRotationMatrix = Matrix.create();
-        let TranslationMatrix = Matrix.create();
+        let scaleMatrix = Matrix.create();
+    
+
 
         let rotationAngle = 0; //angle that we will use to rotate
-        let translationAngle = 0;
         let animationLoop = function(){
 
             gl.clearColor(0.1, 0.7, 0.8, 1.0);
             gl.clear(gl.COLOR_BUFFER_BIT, gl.DEPTH_BUFFER_BIT);
 
             rotationAngle = rotationAngle + 0.7;
-            Matrix.rotate(modelMatrix,rotationAngle, 0.5, 1, 1);
+            Matrix.rotate(YRotationMatrix,rotationAngle, 0.5, 1, 1);
+            Matrix.scale(scaleMatrix, 0.5, 0.5, 0.5);
+            Matrix.multiply(modelMatrix, YRotationMatrix, scaleMatrix);
             
             gl.uniformMatrix4fv(matModelUniformLocation, gl.FALSE, modelMatrix);
 
