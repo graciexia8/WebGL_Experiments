@@ -113,7 +113,7 @@ window.FlowerPotRender = function(gl, program, model, Matrix){
 
             rotationAngle = rotationAngle + 0.7;
             Matrix.rotate(YRotationMatrix,rotationAngle, 0.5, 1, 1);
-            Matrix.scale(scaleMatrix, 0.5, 0.5, 0.5);
+            Matrix.scale(scaleMatrix, 0.8, 0.8, 0.8);
             Matrix.multiply(modelMatrix, YRotationMatrix, scaleMatrix);
             
             gl.uniformMatrix4fv(matModelUniformLocation, gl.FALSE, modelMatrix);
