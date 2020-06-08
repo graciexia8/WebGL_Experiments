@@ -8,5 +8,6 @@ View Demo Here:
 Note* to develop locally on WebGL, I had to embed vertex and fragment shaders within the HTML. I should learn to setup a local webserver...
 
 Some Samples:
+
 ![](sample1.gif)
 ![](sample2.gif)
