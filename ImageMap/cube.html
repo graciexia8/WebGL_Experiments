@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+  
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    h3 {font-family: Helvetica, sans-serif;
+        color: #333333;
+        font-size: x-large;
+       }
+  </style>
+
+</head>
+
+<body onload="InitDemo();">
+    <h3 font-fam>Rotating Cube Demo</h3>
+    <canvas id = "game-surface" width="800" height="600" >
+        browser does not support html5
+    </canvas>
+    <img id="textureImage" src="image.png" width="0" height="0"></img>
+    <script id="vertex-shader" type="not-javascript">
+      precision mediump float;
+      
+      attribute vec3 vertPosition;
+      attribute vec2 vertTexCoord;
+      varying vec2 fragTexCoord;
+      uniform mat4 mWorld;
+      uniform mat4 mView;
+      uniform mat4 mProj;
+      
+      void main()
+      {
+        fragTexCoord = vertTexCoord;
+        gl_Position = mProj * mView * mWorld * vec4(vertPosition, 1.0);
+      }
+    </script>
+
+    <script id="fragment-shader" type="not-javascript">
+      precision mediump float;
+      
+      varying vec2 fragTexCoord;
+      uniform sampler2D sampler;
+      
+      void main()
+      {
+        gl_FragColor = texture2D(sampler, fragTexCoord);
+      }
+    </script>
+
+    <script src="../lib/gl-matrix.js"></script>
+    <script src="javascript/app.js"></script>
+</body>
