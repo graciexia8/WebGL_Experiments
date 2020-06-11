@@ -40,14 +40,15 @@
       precision mediump float;
       
       varying vec2 fragTexCoord;
-      uniform sampler2D sampler;
+      uniform sampler2D u_sampler;
       
       void main()
       {
-        gl_FragColor = texture2D(sampler, fragTexCoord);
+        gl_FragColor = texture2D(u_sampler, fragTexCoord);
       }
     </script>
 
     <script src="../lib/gl-matrix.js"></script>
+    <script src="javascript/model.js"></script>
     <script src="javascript/app.js"></script>
 </body>
