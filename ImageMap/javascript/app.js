@@ -26,6 +26,9 @@ var InitDemo = function () {
 	gl.frontFace(gl.CCW);
 	gl.cullFace(gl.BACK);
 
+	// Determine how many texture units there are
+	console.log(gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS));
+
 	//
 	// Create shaders
 	// 
