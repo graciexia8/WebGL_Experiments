@@ -69,6 +69,7 @@ var InitDemo = function () {
 
 	// Create a model with ll buffer objects available.
 	const model = createModel();
+	console.log(model.normals);
 
 	// Set the vertex buffer attribute to 
 	var boxVertexBufferObject = gl.createBuffer();
@@ -83,6 +84,7 @@ var InitDemo = function () {
 	// Get the attribute locations of the vertices and texture coordinates from shaders
 	var positionAttribLocation = gl.getAttribLocation(program, 'vertPosition');
 	var texCoordAttribLocation = gl.getAttribLocation(program, 'vertTexCoord');
+	var normalAttribLocation = gl.getAttribLocation(program, 'vertNormal');
 
 	gl.vertexAttribPointer(
 		positionAttribLocation, // Attribute location
@@ -106,6 +108,27 @@ var InitDemo = function () {
 	// Enable attributes
 	gl.enableVertexAttribArray(positionAttribLocation);
 	gl.enableVertexAttribArray(texCoordAttribLocation);
+
+	// NORMAL BUFFER OBJECT MUST BE DECLARED AFTER VERTEX POSITION ATTRIBUTE HAS BEEN ENABLED, DUE TO SINGLE GL.ARRAY_BUFFER BINDING POINT.
+	// IF YOU DO IT RIGHT AFTER gl.vertexAttribPointer for the texture coordinates, it rebinds gl.ARRAY_BUFFER to the normals and uses that for 
+	//vertices instead agh.
+
+	// Set the vertex normal buffer attribute
+	var vertexNormalBufferObject = gl.createBuffer();
+	gl.bindBuffer(gl.ARRAY_BUFFER, vertexNormalBufferObject);
+	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(model.normals), gl.STATIC_DRAW);
+
+	// Normal
+	gl.vertexAttribPointer(
+		normalAttribLocation, // Attribute location
+		3, // Number of elements per attribute
+		gl.FLOAT, // Type of elements
+		gl.FALSE,
+		0,
+		0 // Offset from the beginning of a single vertex to this attribute
+	);
+
+	gl.enableVertexAttribArray(normalAttribLocation);
 
 	//
 	// Create texture
@@ -134,30 +157,30 @@ var InitDemo = function () {
 	gl.useProgram(program);
 
 	// Get the locations of the model, view, projection matrices
-	var matWorldUniformLocation = gl.getUniformLocation(program, 'mWorld');
-	var matViewUniformLocation = gl.getUniformLocation(program, 'mView');
-	var matProjUniformLocation = gl.getUniformLocation(program, 'mProj');
+	var pvmUniformLocation = gl.getUniformLocation(program, 'matrix');
+	// Get the locations of the model, view, projection matrices
+	var vmUniformLocation = gl.getUniformLocation(program, 'vm_matrix');
 
 	// Initialize empty array
-	var worldMatrix = new Float32Array(16);
-	var viewMatrix = new Float32Array(16);
-	var projMatrix = new Float32Array(16);
+	const modelMatrix = mat4.create();
+	const viewMatrix = mat4.create();
+	const projMatrix = mat4.create();
 
-	// Set the model, view, projection matrices
-	mat4.identity(worldMatrix);
+	mat4.identity(modelMatrix);
 	mat4.lookAt(viewMatrix, [0, 0, -8], [0, 0, 0], [0, 1, 0]);
 	mat4.perspective(projMatrix, glMatrix.toRadian(45), canvas.clientWidth / canvas.clientHeight, 0.1, 1000.0);
-
-	// tell webGL that these are the locations of the model, view, projection, matric
-	gl.uniformMatrix4fv(matWorldUniformLocation, gl.FALSE, worldMatrix);
-	gl.uniformMatrix4fv(matViewUniformLocation, gl.FALSE, viewMatrix);
-	gl.uniformMatrix4fv(matProjUniformLocation, gl.FALSE, projMatrix);
+	
 
 	// The final pre-processing step is to get the location of the variable in your shader program that will access the texture map.
 	const u_Sampler = gl.getUniformLocation(program, "u_Sampler");
 
 	var xRotationMatrix = new Float32Array(16);
 	var yRotationMatrix = new Float32Array(16);
+
+	const vmMatrix = mat4.create();
+	const pvmMatrix = mat4.create();
+
+
 
 	//
 	// Main render loop
@@ -169,10 +192,15 @@ var InitDemo = function () {
 		angle = performance.now() / 1000 / 6 * 2 * Math.PI;
 		mat4.rotate(yRotationMatrix, identityMatrix, angle, [0, 1, 0]);
 		mat4.rotate(xRotationMatrix, identityMatrix, angle / 4, [1, 0, 0]);
-		mat4.mul(worldMatrix, yRotationMatrix, xRotationMatrix);
-		gl.uniformMatrix4fv(matWorldUniformLocation, gl.FALSE, worldMatrix);
+		mat4.mul(modelMatrix, yRotationMatrix, xRotationMatrix);
 
-		gl.clearColor(0, 0, 0, 0);
+		mat4.multiply(vmMatrix, viewMatrix, modelMatrix);
+		mat4.multiply(pvmMatrix, projMatrix, vmMatrix);
+
+		gl.uniformMatrix4fv(pvmUniformLocation, false, pvmMatrix);
+		gl.uniformMatrix4fv(vmUniformLocation, false, vmMatrix);
+
+		gl.clearColor(0, 0, 0, 1);
 		gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
 
 		// Make the "texture unit" 0 be the active texture unit.
