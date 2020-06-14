@@ -1,90 +1,131 @@
 "use strict";
 
-window.simpleModel = function (name,  vertices, indices, normals) {
+window.simpleModel = function (name,  vertices, indices, normals, uv) {
     const self = this;
     self.name = name;
     self.indices = indices;
 	self.vertices = vertices;
 	self.normals = normals;
+	self.uvCoord = uv;
 
 };
 
 window.createModel = function () {
 
 	// Create vertex buffer for vertices of model
-	var boxVertices = 
+	const boxVertices = 
 	[ // X, Y, Z           U, V
 		// Top
-		-1.75, 1.75, -1.75,   0, 0,	
-		-1.75, 1.75, 1.75,    0, 1,	
-		1.75, 1.75, 1.75,     1, 1,	
-		1.75, 1.75, -1.75,    1, 0,	
+		-1.75, 1.75, -1.75, 	
+		-1.75, 1.75, 1.75, 
+		1.75, 1.75, 1.75,  
+		1.75, 1.75, -1.75,   
 
 		// Left
-		-1.75, 1.75, 1.75,    0, 0,		
-		-1.75, -1.75, 1.75,   1, 0,		
-		-1.75, -1.75, -1.75,  1, 1,		
-		-1.75, 1.75, -1.75,   0, 1,		
+		-1.75, 1.75, 1.75,	
+		-1.75, -1.75, 1.75,
+		-1.75, -1.75, -1.75,	
+		-1.75, 1.75, -1.75,	
 
 		// Right
-		1.75, 1.75, 1.75,    1, 1,		
-		1.75, -1.75, 1.75,   0, 1,	
-		1.75, -1.75, -1.75,  0, 0,	
-		1.75, 1.75, -1.75,   1, 0,		
+		1.75, 1.75, 1.75,		
+		1.75, -1.75, 1.75,
+		1.75, -1.75, -1.75,
+		1.75, 1.75, -1.75,		
 
 		// Front
-		1.75, 1.75, 1.75,    1, 1,	
-		1.75, -1.75, 1.75,    1, 0,	
-		-1.75, -1.75, 1.75,    0, 0,
-		-1.75, 1.75, 1.75,    0, 1,	
+		1.75, 1.75, 1.75,	
+		1.75, -1.75, 1.75,
+		-1.75, -1.75, 1.75,   
+		-1.75, 1.75, 1.75,   
 
 		// Back
-		1.75, 1.75, -1.75,    0, 0,	
-		1.75, -1.75, -1.75,    0, 1,	
-		-1.75, -1.75, -1.75,    1, 1,	
-		-1.75, 1.75, -1.75,    1, 0,	
+		1.75, 1.75, -1.75,   	
+		1.75, -1.75, -1.75,   	
+		-1.75, -1.75, -1.75,   
+		-1.75, 1.75, -1.75,  	
 
 		// Bottom
-		-1.75, -1.75, -1.75,   1, 1,	
-		-1.75, -1.75, 1.75,    1, 0,	
-		1.75, -1.75, 1.75,     0, 0,	
-		1.75, -1.75, -1.75,    0, 1,	
+		-1.75, -1.75, -1.75,
+		-1.75, -1.75, 1.75,	
+		1.75, -1.75, 1.75,	
+		1.75, -1.75, -1.75,	
 	];
 
-		// Create vertex buffer for vertices of model
-	var vertexNormal = 
+	// Create vertex buffer for vertices of model
+	const uv = 
 		[ // X, Y, Z           U, V
 			// Top
-			0, 1, 0,
-			0, 1, 0,
-			0, 1, 0,
-			0, 1, 0,
+			0, 0,	
+			0, 1,	
+			1, 1,	
+			1, 0,	
 	
 			// Left
-			-1, 0, 0,
-			-1, 0, 0,
-			-1, 0, 0,
-			-1, 0, 0,
+			0, 0,		
+			1, 0,		
+			1, 1,		
+			0, 1,		
 	
 			// Right
-			1, 0, 0,
-			1, 0, 0,
-			1, 0, 0,
-			1, 0, 0,
+			1, 1,		
+			0, 1,	
+			0, 0,	
+			1, 0,		
 	
 			// Front
-			0, 0, 1,
-			0, 0, 1,
-			0, 0, 1,
-			0, 0, 1,
+			1, 1,	
+			1, 0,	
+			0, 0,
+			0, 1,	
 	
 			// Back
+			0, 0,	
+			0, 1,	
+			1, 1,	
+			1, 0,	
+	
+			// Bottom
+			1, 1,	
+			1, 0,	
+			0, 0,	
+			0, 1,	
+		];
+
+		// Create vertex buffer for vertices of model
+	const vertexNormal = 
+		[ // X, Y, Z           U, V
+			// Top Y+
+			0, 1, 0,
+			0, 1, 0,
+			0, 1, 0,
+			0, 1, 0,
+	
+			// Left X-
+			-1, 0, 0,
+			-1, 0, 0,
+			-1, 0, 0,
+			-1, 0, 0,
+	
+			// Right X+
+			1, 0, 0,
+			1, 0, 0,
+			1, 0, 0,
+			1, 0, 0,
+	
+			// Front Z+
+			0, 0, 1,
+			0, 0, 1,
+			0, 0, 1,
+			0, 0, 1,
+	
+			// Back Z-
 			0, 0, -1,
 			0, 0, -1,
 			0, 0, -1,
 			0, 0, -1,
 	
-			// Bottom
+			// Bottom Y-
 			0, -1, 0,
 			0, -1, 0,
 			0, -1, 0,
@@ -92,8 +133,8 @@ window.createModel = function () {
 		];
 	
 
-    // Create buffer for indices
-	var boxIndices =
+    // Create buffer for indices, which vertices make up the cube
+	const boxIndices =
 	[
 		// Top
 		0, 1, 2,
@@ -122,7 +163,7 @@ window.createModel = function () {
   
     
   // Create a model that is a triangle
-  const model = new simpleModel("genDesignCube", boxVertices, boxIndices, vertexNormal);
+  const model = new simpleModel("genDesignCube", boxVertices, boxIndices, vertexNormal, uv);
 
   return model;
 };
