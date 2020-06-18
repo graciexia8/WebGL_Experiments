@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+  
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      background-color: #ffffff;
+    }
+    h3 {font-family: Helvetica, sans-serif;
+        color: #000000;
+        font-size: x-large;
+       }
+  </style>
+
+</head>
+
+<body onload="InitDemo();">
+    <h3 font-fam>Ambient Lighting Demo on User Defined Object</h3>
+    <canvas id = "game-surface" width="800" height="600" >
+        browser does not support html5
+    </canvas>
+    <img id="textureImage" src="image.png" width="0" height="0"></img>
+    <script id="vertex-shader" type="not-javascript">
+      precision mediump float;
+
+      attribute vec3 vertPosition;
+      attribute vec2 vertTexCoord;
+      attribute vec3 vertNormal;
+
+      // Data (to be interpolated) that is passed on to the fragment shader
+      varying vec3 v_Vertex;
+      varying vec3 v_Normal;
+      varying vec2 fragTexCoord;
+      
+      uniform mat4 vm_matrix;
+      uniform mat4 matrix;
+      
+      void main()
+      {
+        // Perform the model and view transformations on the vertex and pass this
+        // location to the fragment shader.
+        v_Vertex = vec3( vm_matrix * vec4(vertPosition, 1.0) );
+      
+        // Perform the model and view transformations on the vertex's normal vector
+        // and pass this normal vector to the fragment shader.
+        v_Normal = vec3( vm_matrix * vec4(vertNormal, 0.0) );
+
+        fragTexCoord = vertTexCoord;
+        gl_Position = matrix * vec4(vertPosition, 1.0);
+      }
+    </script>
+
+    <script id="fragment-shader" type="not-javascript">
+      // Fragment shader program
+      precision mediump float;
+    
+      const vec4 ambient_color = vec4( 0.4, 0.7, 0.8, 1.0);
+      uniform sampler2D u_sampler;
+
+      // Data (to be interpolated) that is passed on to the fragment shader
+      varying vec3 v_Vertex;
+      varying vec3 v_Normal;
+      varying vec2 fragTexCoord;
+      
+      void main()
+      {
+        // Apply texture image to cube
+        vec4 texel = texture2D(u_sampler, fragTexCoord);
+
+        // Multiply to get ambient color
+        vec4 color = texel * ambient_color;
+
+        // Set color for each fragmeent
+        gl_FragColor = color;
+      }
+    </script>
+
+    <script src="../lib/gl-matrix.js"></script>
+    <script src="javascript/model.js"></script>
+    <script src="javascript/render.js"></script>
+    <script src="javascript/app.js"></script>
+</body>
