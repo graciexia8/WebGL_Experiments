@@ -3,7 +3,7 @@ Based off teachings from [Dr. Wayne Brown](http://learnwebgl.brown37.net/index.h
 The intention of these experiments was for me for learn the theory behind WebGL. I used both resources as reference but tried my best to not follow along and code on my own. I'm currently in the process of making my code better...
 
 View Demo Here:
-[Demo](https://graciexia8.github.io/webgl_learning/)
+[Demo](https://graciexia8.github.io/WebGL_Experiments/)
 
 Note* to develop locally on WebGL, I had to embed vertex and fragment shaders within the HTML. I should learn to setup a local webserver...
 
