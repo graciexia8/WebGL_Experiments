@@ -17,7 +17,7 @@
 </head>
 
 <body onload="InitDemo();">
-    <h3 font-fam>Diffuse Lighting Demo on User Defined Object</h3>
+    <h3 font-fam>Specular Lighting Demo on User Defined Object</h3>
     <canvas id = "game-surface" width="800" height="600" >
         browser does not support html5
     </canvas>
@@ -53,9 +53,13 @@
     </script>
 
     <script id="fragment-shader" type="not-javascript">
+      // Fragment shader program
       precision mediump float;
       
-      const vec3 lightDirection = normalize(vec3(0, 1.8, 1.8));
+      const vec3 lightDirection = normalize(vec3(0.0, 1.8, 1.8));
+      const vec3 lightColor = vec3(1.0, 1.0, 1.0);
+    
+      const float shininess = 13.0;
       uniform sampler2D u_sampler;
 
       // Data (to be interpolated) that is passed on to the fragment shader
@@ -67,7 +71,12 @@
       {
         vec3 to_light;
         vec3 vertex_normal;
+        vec3 reflection;
+        vec3 to_camera;
         float cos_angle;
+        vec3 specular_color;
+        vec3 object_color;
+        vec3 color;
 
         // Calculate a vector from the fragment location to the light source
         to_light = lightDirection - v_Vertex;
@@ -77,14 +86,29 @@
         // which can make it un-normalized. So normalize the vertex's normal vector.
         vertex_normal = normalize( v_Normal );
       
-        // Calculate the cosine of the angle between the vertex's normal vector
-        // and the vector going to the light.
-        cos_angle = dot(vertex_normal, to_light);
-        cos_angle = clamp(cos_angle, 0.0, 1.0);
+        // Calculate the reflection vector
+        reflection = 2.0 * dot(vertex_normal, to_light) * vertex_normal - to_light;
+      
+        // Calculate a vector from the fragment location to the camera.
+        // The camera is at the origin, so negating the vertex location gives the vector
+        to_camera = -1.0 * v_Vertex;
 
+        // Calculate the cosine of the angle between the reflection vector
+        // and the vector going to the camera.
+        reflection = normalize( reflection );
+        to_camera = normalize( to_camera );
+        cos_angle = dot(reflection, to_camera);
+        cos_angle = clamp(cos_angle, 0.0, 1.0);
+        cos_angle = pow(cos_angle, shininess);
+
+        // If this fragment gets a specular reflection, use the light's color,
+        // otherwise use the objects's color
+        specular_color = lightColor * cos_angle;
+        vec4 specular_color_final = vec4(specular_color, 0.0);
         vec4 texel = texture2D(u_sampler, fragTexCoord);
-        texel.xyz *= cos_angle;
-        gl_FragColor = texel;
+        texel.xyz *= (1.0 - cos_angle);
+
+        gl_FragColor = texel + specular_color_final;
       }
     </script>
 
