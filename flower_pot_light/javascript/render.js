@@ -138,9 +138,7 @@ window.Render = function(gl, program, model, canvas){
         // const u_Sampler = gl.getUniformLocation(program, "u_Sampler");
 
         // Intermediate matrices that calculate rotation
-        let xRotationMatrix = mat4.create();
-        let yRotationMatrix = mat4.create();
-        let scaleMatrix = mat4.create();
+        let rotationMatrix = mat4.create();
 
         // vm matrix to manipulate diffuse lighting in fragment shader
         const vmMatrix = mat4.create();
@@ -157,13 +155,16 @@ window.Render = function(gl, program, model, canvas){
         const identityMatrix = mat4.create();
         mat4.identity(identityMatrix);
 
+        //create a scale matrix
+        let scaleMatrix = mat4.create();
+        mat4.scale(scaleMatrix, identityMatrix, [2,2,2]);
+
         let angle = 0;
         var loop = function () {
             angle = performance.now() / 1000 / 6 * 2 * Math.PI;
-            mat4.rotate(yRotationMatrix, identityMatrix, angle, [0.5, 1, 0]);
-            mat4.rotate(xRotationMatrix, identityMatrix, angle, [1, 0, 0]);
+            mat4.rotate(rotationMatrix, identityMatrix, angle, [0.5, 1, 0]);
             // mat4.scale(scaleMatrix, [2, 2, 2]);
-            mat4.mul(modelMatrix,identityMatrix, yRotationMatrix);
+            mat4.mul(modelMatrix,scaleMatrix, rotationMatrix);
 
             mat4.multiply(vmMatrix, viewMatrix, modelMatrix);
             mat4.multiply(pvmMatrix, projMatrix, vmMatrix);
@@ -173,7 +174,7 @@ window.Render = function(gl, program, model, canvas){
             gl.uniformMatrix4fv(vmUniformLocation, false, vmMatrix);
 
             // Black background
-            gl.clearColor(0.0, 0.0, 0.0, 1);
+            gl.clearColor(0.0, 0.0, 0.0, 0.0);
             gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
 
             // Make the "texture unit" 0 be the active texture unit.
