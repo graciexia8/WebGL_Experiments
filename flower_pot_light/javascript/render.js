@@ -46,6 +46,9 @@ window.Render = function(gl, program, model, canvas){
     }
 
     self.render = function (gl, program, model) {
+        // Get uniform locations of things
+        const u_Color_location  = gl.getUniformLocation(program, 'u_Color');
+
         // Get the attribute locations of the vertices and texture coordinates from shaders
         const positionAttribLocation = gl.getAttribLocation(program, 'vertPosition');
         const texCoordAttribLocation = gl.getAttribLocation(program, 'vertTexCoord');
@@ -72,20 +75,20 @@ window.Render = function(gl, program, model, canvas){
         // Enable attributes
         gl.enableVertexAttribArray(positionAttribLocation);
 
-        // Set the vertex buffer attribute to 
-        const uvBufferObject = _createBufferObject(gl, model.uvCoord);
+        // // Set the vertex buffer attribute to 
+        // const uvBufferObject = _createBufferObject(gl, model.uvCoord);
 
-        // TEXTURE COORDINATES, THIS GUY USED
-        gl.vertexAttribPointer(
-            texCoordAttribLocation, // Attribute location
-            2, // Number of elements per attribute
-            gl.FLOAT, // Type of elements
-            gl.FALSE,
-            0, // Size of an individual vertex
-            0 // Offset from the beginning of a single vertex to this attribute
-        );
+        // // TEXTURE COORDINATES, THIS GUY USED
+        // gl.vertexAttribPointer(
+        //     texCoordAttribLocation, // Attribute location
+        //     2, // Number of elements per attribute
+        //     gl.FLOAT, // Type of elements
+        //     gl.FALSE,
+        //     0, // Size of an individual vertex
+        //     0 // Offset from the beginning of a single vertex to this attribute
+        // );
 
-        gl.enableVertexAttribArray(texCoordAttribLocation);
+        // gl.enableVertexAttribArray(texCoordAttribLocation);
 
         // NORMAL BUFFER OBJECT MUST BE DECLARED AFTER VERTEX POSITION ATTRIBUTE HAS BEEN ENABLED, DUE TO SINGLE GL.ARRAY_BUFFER BINDING POINT.
         // IF YOU DO IT RIGHT AFTER gl.vertexAttribPointer for the texture coordinates, it rebinds gl.ARRAY_BUFFER to the normals and uses that for 
@@ -132,7 +135,7 @@ window.Render = function(gl, program, model, canvas){
         
 
         // The final pre-processing step is to get the location of the variable in your shader program that will access the texture map.
-        const u_Sampler = gl.getUniformLocation(program, "u_Sampler");
+        // const u_Sampler = gl.getUniformLocation(program, "u_Sampler");
 
         // Intermediate matrices that calculate rotation
         let xRotationMatrix = mat4.create();
@@ -144,6 +147,8 @@ window.Render = function(gl, program, model, canvas){
         // pvm matrix to set the vertices in of object in correct position
         const pvmMatrix = mat4.create();
 
+        // Set the color for all of the triangle faces
+        gl.uniform4fv(u_Color_location, model.color);
 
 
         //

@@ -7,7 +7,10 @@
       const float ambientPecentage = 0.25;
     
       const float shininess = 20.0;
-      uniform sampler2D u_sampler;
+      // uniform sampler2D u_sampler;
+
+      uniform vec4 u_Color;
+
 
       // Data (to be interpolated) that is passed on to the fragment shader
       varying vec3 v_Vertex;
@@ -27,9 +30,9 @@
         vec3 specular_color;
         vec3 color;
 
-        vec4 texel = texture2D(u_sampler, fragTexCoord);
+        // vec4 texel = texture2D(u_sampler, fragTexCoord);
 
-        ambient_color = (ambientPecentage * ambientColor) * texel.xyz;
+        ambient_color = (ambientPecentage * ambientColor) * u_Color.xyz;
 
         // Calculate a vector from the fragment location to the light source
         to_light = lightDirection - v_Vertex;
@@ -44,7 +47,7 @@
         cos_angle = dot(vertex_normal, to_light);
         cos_angle = clamp(cos_angle, 0.0, 1.0);
 
-        diffuse_color = texel.xyz * cos_angle;
+        diffuse_color =  u_Color.xyz * cos_angle;
       
         // Calculate the reflection vector
         reflection = 2.0 * dot(vertex_normal, to_light) * vertex_normal - to_light;
@@ -71,5 +74,5 @@
 
         color = ambient_color + diffuse_color + specular_color;
 
-        gl_FragColor = vec4(color, texel.a);
+        gl_FragColor = vec4(color,  u_Color.a);
       }
