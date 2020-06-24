@@ -1,32 +1,15 @@
 
-window.InitDemo = function () {
-	loadTextResource("../flower_pot_light/Shaders/shader.vs.glsl", function (vsErr, vsText) {
-	  if (vsErr) {
-		alert("Fatal Error: Getting vertex shader");
-		console.error(vsErr);
-	  }
-	  else {
-		loadTextResource("../flower_pot_light/Shaders/shader.fs.glsl", function (fsErr, fsText) {
-		  if (fsErr) {
-			alert("Fatal Error: Getting fragment shader");
-			console.error(fsErr);
-		  }
-		  else {
-			loadJSONResource("../models/json_models/flower_pot.json", function (modelErr, modelText){
-			  if (modelErr) {
-				alert("Fatal Error: Getting model json");
-				console.error(modelErr);
-			  }
-			  else {
-				runDemo(vsText, fsText, modelText); // Successfully load vertex shader, fragment shader and model data before rendering.
-			  }
-			});
-		  
-		  }
-		});
-	  }
-	});
-  };
+window.InitDemo = async function() {
+	try {
+		const vertexShader = await loadTextResource("../flower_pot_light/Shaders/shader.vs.glsl");
+		const fragmentShader = await loadTextResource("../flower_pot_light/Shaders/shader.fs.glsl");
+		const modelData = await loadJSONResource("../models/json_models/flower_pot.json");
+		runDemo(vertexShader, fragmentShader, modelData);
+	}
+	catch(e){
+		alert(e);
+	}
+};
 
 var runDemo = function (vertShadertext, fragShadertext, modelText) {
 
