@@ -157,7 +157,7 @@ window.Render = function(gl, program, model, canvas){
 
         //create a scale matrix
         let scaleMatrix = mat4.create();
-        mat4.scale(scaleMatrix, identityMatrix, [2,2,2]);
+        mat4.scale(scaleMatrix, identityMatrix, [1.2,1.2,1.2]);
 
         let angle = 0;
         var loop = function () {

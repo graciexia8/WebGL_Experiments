@@ -17,7 +17,7 @@ window.createModel = function (modelObj) {
     model.indices = [].concat.apply([], modelObj.meshes[0].faces);
     // Vertex data
     model.vertices = modelObj.meshes[0].vertices;
-	model.color = new Float32Array( [0.5, 0.0, 0.3, 1.0]); 
+	model.color = new Float32Array( [0.2, 0.5, 0.3, 1.0]); 
 	model.normals = modelObj.meshes[0].normals;
     
     return model;
